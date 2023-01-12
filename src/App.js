@@ -5,8 +5,11 @@ import Meals from "./components/Meals/Meals";
 function App() {
   return (
     <React.Fragment>
-      <Header/>
-      <Meals/>
+      <Header />
+      <main>
+        <Meals />
+      </main>
+
     </React.Fragment>
   );
 }
