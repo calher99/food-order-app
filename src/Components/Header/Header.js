@@ -4,13 +4,13 @@ import mealsPic from '../../assets/meals.jpg'
 import meals2Pic from '../../assets/meal2.jpg'
 import HeaderCartButton from './HeaderCartButton';
 
-const Header = () => {
+const Header = props => {
 
     return (
         <React.Fragment>
             <header className={classes.header}>
                 <h1>ReactMeals</h1>
-                <HeaderCartButton/>
+                <HeaderCartButton onSelect={props.onSelectCart}/>
             </header>
             <div className={classes['main-image']}>
                 <img src={meals2Pic} alt='Table with food'/>
