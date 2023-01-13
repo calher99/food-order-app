@@ -4,8 +4,8 @@ import classes from './Cart.module.css'
 
 const Cart = () => {
     const DUMMY_CART = [{id: 'c1', name: 'Sushi', amount: '2', price: '12.99'}];
-    const cartItems = <ul className={classes['cart-items']}>{DUMMY_CART.map( item => {
-        <li>{item.name}</li>
+    const cartItems = <ul className={classes.items}>{DUMMY_CART.map( item => {
+        return <li>{item.name}</li>
     })}</ul>
 
     return (
@@ -19,9 +19,6 @@ const Cart = () => {
                 <button className={classes['button--alt']}>Close</button>
                 <button className={classes.button}>Order</button>
             </div>
-
-            totalAMount
-            Actions
         </Modal>
     )
 }

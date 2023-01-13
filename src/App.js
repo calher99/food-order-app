@@ -7,10 +7,10 @@ function App() {
   return (
     <React.Fragment>
       <Cart/>
-      <Header />
+      {/* <Header />
       <main>
         <Meals />
-      </main>
+      </main> */}
 
     </React.Fragment>
   );
