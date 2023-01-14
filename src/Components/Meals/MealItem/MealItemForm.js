@@ -20,7 +20,7 @@ const MealItemForm = props => {
       // We pass above the amount that we have chosen
       // In the parent component we will have all the data about the name,
       // id, etc
-      // Here we just have a generic input data
+      // Here we just have the amount and nothing else!
       props.onAddToCart(enteredAmountNumber);
     }
 
@@ -35,7 +35,7 @@ const MealItemForm = props => {
           defaultValue: '1',
         }}/>
         <button>+ Add</button>
-        <p>{!isValid && 'Please enter a number(1 to 5)'}</p>
+        {!isValid && <p>Please enter a number(1 to 5)</p>}
     </form>
   )
 }

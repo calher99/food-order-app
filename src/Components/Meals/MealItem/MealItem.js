@@ -13,6 +13,7 @@ const MealItem = props => {
         // It wil also pass the amount that we have chosen from the item
 
         // Call ctx and pass it a new Item with the data from the triggered form
+        // HOW TO PASS DATA TO THE CONTEXT
         ctx.addItem({
             name: props.name,
             price: props.price,
