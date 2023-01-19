@@ -14,6 +14,8 @@ const MealItem = props => {
 
         // Call ctx and pass it a new Item with the data from the triggered form
         // HOW TO PASS DATA TO THE CONTEXT
+        // Add item calls a function that is in the CartProvider module
+        // It is a dispatch function that will update values of useReducer
         ctx.addItem({
             name: props.name,
             price: props.price,
