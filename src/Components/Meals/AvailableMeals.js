@@ -1,99 +1,192 @@
-import React, { useEffect } from 'react'
-import useHttp from '../../hooks/use-https';
+import { useEffect, useState } from 'react';
+
 import Card from '../UI/Card';
-import classes from './AvailableMeals.module.css'
 import MealItem from './MealItem/MealItem';
-// Unrealistic component bc these would be retrieved from an API
+import classes from './AvailableMeals.module.css';
 
-
-const DUMMY_MEALS = [
-    {
-        id: 'm1',
-        name: 'Sushi',
-        description: 'Finest fish and veggies',
-        price: 22.99,
-    },
-    {
-        id: 'm2',
-        name: 'Schnitzel',
-        description: 'A german specialty!',
-        price: 16.5,
-    },
-    {
-        id: 'm3',
-        name: 'Barbecue Burger',
-        description: 'American, raw, meaty',
-        price: 12.99,
-    },
-    {
-        id: 'm4',
-        name: 'Green Bowl',
-        description: 'Healthy...and green...',
-        price: 18.99,
-    },
-];
 const AvailableMeals = () => {
-    const { isLoading, error, sendRequest: fetchMeals } = useHttp();
-    const { isLoad, erro, sendRequest: sendMeals } = useHttp();
+  const [meals, setMeals] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [httpError, setHttpError] = useState();
 
-    useEffect(() => {
-        const transformMeals = (mealsObj) => {
-            const loadedMeals = [];
-            console.log(mealsObj)
-            // for (const mealKey in mealsObj) {
-            //   loadedMeals.push({ id: mealKey, text: mealsObj[mealKey].text });
-            // }
-      
-            // setMeals(loadedTasks);
-          };
+  useEffect(() => {
+    const fetchMeals = async () => {
+      const response = await fetch(
+        'https://academind-react-5d8ac-default-rtdb.europe-west1.firebasedatabase.app/meals.json'
+      );
 
-        fetchMeals(
-            { url: 'https://academind-react-5d8ac-default-rtdb.europe-west1.firebasedatabase.app/meals.json' },
-            transformMeals
-        )
-    }, [fetchMeals])
-    useEffect(() => {
-        const func = objcreated => {
-            console.log(objcreated)
-        }
-        sendMeals({
-            url: 'https://academind-react-5d8ac-default-rtdb.europe-west1.firebasedatabase.app/meals.json',
-            method: 'POST',
-            body: { 
-             id: DUMMY_MEALS[3].id,
-             name: DUMMY_MEALS[3].name,
-             description: DUMMY_MEALS[3].description,
-             price: DUMMY_MEALS[3].price,
+      if (!response.ok) {
+        throw new Error('Something went wrong!');
+      }
 
-                 },
-            headers: {
-              'Content-Type': 'application/json',
-            },
-          }, 
-          func
-          )
-    }, [sendMeals])
+      const responseData = await response.json();
 
+      const loadedMeals = [];
+
+      for (const key in responseData) {
+        loadedMeals.push({
+          id: key,
+          name: responseData[key].name,
+          description: responseData[key].description,
+          price: responseData[key].price,
+        });
+      }
+
+      setMeals(loadedMeals);
+      setIsLoading(false);
+    };
+
+    fetchMeals().catch((error) => {
+      setIsLoading(false);
+      setHttpError(error.message);
+    });
+  }, []);
+
+  if (isLoading) {
     return (
-        <section className={classes.meals}>
-            <Card>
-                <ul>
-                    {DUMMY_MEALS.map(meal => {
-                        return (
-                            <MealItem
-                                key={meal.id}
-                                id={meal.id}
-                                name={meal.name}
-                                text={meal.description}
-                                price={meal.price}
-                            />
-                        );
-                    })}
-                </ul>
-            </Card>
-        </section>
+      <section className={classes.MealsLoading}>
+        <p>Loading...</p>
+      </section>
+    );
+  }
 
-    )
-}
+  if (httpError) {
+    return (
+      <section className={classes.MealsError}>
+        <p>{httpError}</p>
+      </section>
+    );
+  }
 
-export default AvailableMeals
+  const mealsList = meals.map((meal) => (
+    <MealItem
+      key={meal.id}
+      id={meal.id}
+      name={meal.name}
+      description={meal.description}
+      price={meal.price}
+    />
+  ));
+
+  return (
+    <section className={classes.meals}>
+      <Card>
+        <ul>{mealsList}</ul>
+      </Card>
+    </section>
+  );
+};
+
+export default AvailableMeals;
+
+// //  NOT WORKING AND DONT REALLY KNOW WHY!?!??!
+
+// import React, { useEffect, useState } from 'react'
+// import useHttp from '../../hooks/use-https';
+// import Card from '../UI/Card';
+// import classes from './AvailableMeals.module.css'
+// import MealItem from './MealItem/MealItem';
+// // Unrealistic component bc these would be retrieved from an API
+
+
+// const DUMMY_MEALS = [
+//     {
+//         id: 'm1',
+//         name: 'Sushi',
+//         description: 'Finest fish and veggies',
+//         price: 22.99,
+//     },
+//     {
+//         id: 'm2',
+//         name: 'Schnitzel',
+//         description: 'A german specialty!',
+//         price: 16.5,
+//     },
+//     {
+//         id: 'm3',
+//         name: 'Barbecue Burger',
+//         description: 'American, raw, meaty',
+//         price: 12.99,
+//     },
+//     {
+//         id: 'm4',
+//         name: 'Green Bowl',
+//         description: 'Healthy...and green...',
+//         price: 18.99,
+//     },
+// ];
+// const AvailableMeals = () => {
+
+//     const { meals, setMeals } = useState([])
+
+//     useEffect(() => {
+//         // We cannot set a default function of a useEffect as async
+//         const fetchData = async () => {
+//             const response = await fetch('https://academind-react-5d8ac-default-rtdb.europe-west1.firebasedatabase.app/meals.json');
+//             const data = await response.json();
+
+//             const loadedMeals = [];
+
+//             for (const mealKey in data) {
+//                 loadedMeals.push({
+//                     id: mealKey,
+//                     name: data[mealKey].name,
+//                     description: data[mealKey].description,
+//                     price: data[mealKey].price,
+
+//                 });
+//             }
+            
+//             setMeals(loadedMeals);
+//         }
+//         fetchData()
+//     }, [])
+
+    
+//     const mealList = meals.map(meal => {
+//         return (
+//             <MealItem
+//                 key={meal.id}
+//                 id={meal.id}
+//                 name={meal.name}
+//                 text={meal.description}
+//                 price={meal.price}
+//             />)
+//         })
+//     // useEffect(() => {
+
+//     //     const transformMeals = (mealsObj) => {
+//     //         const loadedMeals = [];
+
+//     //         for (const mealKey in mealsObj) {
+//     //           loadedMeals.push({ 
+//     //             id: mealKey, 
+//     //             name: mealsObj[mealKey].name,
+//     //             description: mealsObj[mealKey].description,
+//     //             price: mealsObj[mealKey].price,
+
+//     //         });
+//     //         }
+//     //         setMeals(loadedMeals);
+//     //         console.log(meals)
+//     //       };
+
+//     //     fetchMeals(
+//     //         { url: 'https://academind-react-5d8ac-default-rtdb.europe-west1.firebasedatabase.app/meals.json' },
+//     //         transformMeals
+//     //     )
+//     // }, [fetchMeals])
+
+//     return (
+//         <section className={classes.meals}>
+//             <Card>
+//                 <ul>
+//                     {mealList}
+//                 </ul>
+//             </Card>
+//         </section>
+
+//     )
+// }
+
+// export default AvailableMeals
